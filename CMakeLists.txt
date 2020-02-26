@@ -4,6 +4,8 @@ project(SwiftWin32 LANGUAGES Swift)
 
 set(CMAKE_Swift_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/swift)
 
+find_package(swift-log REQUIRED)
+
 add_library(SwiftWin32 SHARED
   Sources/Application/Application.swift
   Sources/Application/ApplicationDelegate.swift
@@ -26,13 +28,19 @@ target_sources(SwiftWin32 PRIVATE
   Sources/CG/Rect.swift
   Sources/CG/Size.swift)
 target_sources(SwiftWin32 PRIVATE
+  Sources/Support/Logging.swift
   Sources/Support/Range.swift
   Sources/Support/Rect+UIExtensions.swift
   Sources/Support/String.swift
   Sources/Support/WinSDK+Extensions.swift)
 target_compile_options(SwiftWin32 PRIVATE
   -Xcc -DCOBJMACROS)
-target_link_libraries(SwiftWin32 PUBLIC User32 Gdi32 ComCtl32)
+target_link_libraries(SwiftWin32 PUBLIC
+  User32
+  Gdi32
+  ComCtl32)
+target_link_libraries(SwiftWin32 PUBLIC
+  SwiftLog::Logging)
 set_target_properties(SwiftWin32 PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_Swift_MODULE_DIRECTORY}
   INTERFACE_LINK_DIRECTORIES $<TARGET_LINKER_FILE_DIR:SwiftWin32>)
